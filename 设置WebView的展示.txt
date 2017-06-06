@@ -1,0 +1,37 @@
+    private void setWebViewData(NewsDetailBean newsDetailBean) {
+
+        
+        //根据Bean中数据来进行处理
+        if(newsDetailBean!=null){
+	    mTvReply.setText(newsDetailBean.getReplyCount()+"");
+            String body = newsDetailBean.getBody();
+
+            //加载标题
+            String titleHTML = "<p style = \"margin:25px 0px 0px 0px\"><span style='font-size:22px;'><strong>" + newsDetailBean.getTitle() + "</strong></span></p>";// 标题
+            titleHTML = titleHTML+ "<p><span style='color:#999999;font-size:14px;'>"+newsDetailBean.getSource()+"&nbsp&nbsp"+newsDetailBean.getPtime()+"</span></p>";//来源与时间
+            titleHTML = titleHTML+"<div style=\"border-top:1px dotted #999999;margin:20px 0px\"></div>";//加条虚线
+            //设置正文的字体
+            body = "<div style='line-height:180%;'><span style='font-size:15px;'>"+body+"</span></div>";
+            //替换body中图片标签,用来进行图片展示
+
+
+
+            //<!--img -->
+            List<NewsDetailImageBean> img = newsDetailBean.getImg();
+            for (int i = 0; i < img.size(); i++) {
+                NewsDetailImageBean newsDetailImageBean = img.get(i);
+                String ref = newsDetailImageBean.getRef();
+                String src = newsDetailImageBean.getSrc();
+                //html  直接写图片地址没东西,
+                src = "<img onclick=\"startPage("+i+")\" src=\""+src+"\"/>";
+                body = body.replace(ref,src);
+            }
+            body = titleHTML +body;
+            //加样式,缩放图片
+            body = "<html><head><style>img{width:100%}</style>" +
+                    "<script type=\"text/javascript\"> function startPage(i){window.test.showPic(i);}" +
+                    "</script></head>"+body+"</html>";
+            mWebView.loadDataWithBaseURL(null,body,"text/html","utf-8",null);
+
+        }
+    }
